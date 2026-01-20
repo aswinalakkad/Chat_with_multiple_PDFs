@@ -1,7 +1,7 @@
 import streamlit as st
 from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 import os
@@ -11,6 +11,8 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
+
+
 
 # Load environment variables (works locally with .env)
 try:
@@ -57,7 +59,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
 def get_vector_store(text_chunks):
-    # force-load sentence-transformers (important for Streamlit Cloud)
+    # Force-load model (important for Streamlit Cloud)
     _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
     embeddings = HuggingFaceEmbeddings(
