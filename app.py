@@ -55,9 +55,6 @@ def get_text_chunks(text):
     return unique_chunks
 
 
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
-
 def get_vector_store(text_chunks):
     # Force-load model (important for Streamlit Cloud)
     _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
@@ -78,14 +75,16 @@ def get_vector_store(text_chunks):
     
 
 def get_conversational_chain():
+    # Embeddings (CPU-safe for Streamlit Cloud)
     embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-mpnet-base-v2"
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"}
     )
 
-    vectorstore = FAISS.load_local(
-        "faiss_index",
-        embeddings,
-        allow_dangerous_deserialization=True
+    # 🔴 FAISS REMOVED → ✅ ChromaDB used
+    vectorstore = Chroma(
+        persist_directory="chroma_db",
+        embedding_function=embeddings
     )
 
     prompt_template = """You are a helpful assistant that answers questions based on the provided context from PDF documents.
@@ -114,7 +113,7 @@ Answer (be specific and concise):"""
         api_key = st.secrets["GROQ_API_KEY"]
     except:
         api_key = os.getenv("GROQ_API_KEY")
-    
+
     if not api_key:
         st.error("⚠️ GROQ_API_KEY not found! Please add it to Streamlit secrets or .env file")
         st.stop()
@@ -138,6 +137,7 @@ Answer (be specific and concise):"""
     )
 
     return chain
+
 
 
 def user_input(user_question):
