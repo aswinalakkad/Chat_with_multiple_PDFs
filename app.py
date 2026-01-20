@@ -83,7 +83,7 @@ def get_conversational_chain():
         model_kwargs={"device": "cpu"}
     )
 
-    # 🔴 FAISS REMOVED → ✅ ChromaDB used
+    
     vectorstore = Chroma(
         persist_directory="chroma_db",
         embedding_function=embeddings
