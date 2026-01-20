@@ -1,6 +1,14 @@
 # 📚 Chat with Multiple PDFs
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://chatwithmultiplepdfs-jzjim4ffya5izw7xrgllsy.streamlit.app/)
+
 An AI-powered RAG application for chatting with multiple PDF documents using natural language.
+
+## 🚀 Live Demo
+
+[![Try Now](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://chatwithmultiplepdfs-jzjim4ffya5izw7xrgllsy.streamlit.app/)
+
+**Click above to chat with PDFs instantly!** ✅
 
 ## ✨ Features
 
@@ -12,6 +20,8 @@ An AI-powered RAG application for chatting with multiple PDF documents using nat
 - 🛡️ No hallucinations
 
 ## 🧠 How It Works
+
+
 
 PDFs → Parse → Chunk → Embed → ChromaDB → Query → Groq Answer
 
