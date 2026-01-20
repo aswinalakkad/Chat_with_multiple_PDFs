@@ -57,7 +57,7 @@ def get_text_chunks(text):
 
 
 def get_vector_store(text_chunks):
-    # 🔥 CLEAR old vector store (important)
+    # Clear old vector store
     if os.path.exists("chroma_db"):
         shutil.rmtree("chroma_db")
 
@@ -68,14 +68,21 @@ def get_vector_store(text_chunks):
         model_kwargs={"device": "cpu"}
     )
 
+    client = chromadb.Client(
+        settings=chromadb.Settings(
+            persist_directory="chroma_db",
+            anonymized_telemetry=False
+        )
+    )
+
     vectordb = Chroma.from_texts(
         texts=text_chunks,
         embedding=embeddings,
-        persist_directory="chroma_db"
+        client=client,
+        collection_name="pdf_collection"
     )
 
     return vectordb
-
 
     
 
