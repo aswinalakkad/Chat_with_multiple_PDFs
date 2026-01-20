@@ -57,12 +57,9 @@ def get_text_chunks(text):
 
 
 
-def get_vector_store(text_chunks):
-    # 🔄 Clear old vector store to force refresh
-    if os.path.exists("chroma_db"):
-        shutil.rmtree("chroma_db")
 
-    # Force-load model (important for Streamlit Cloud)
+def get_vector_store(text_chunks):
+    # Force-load model
     _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
     embeddings = HuggingFaceEmbeddings(
@@ -70,11 +67,10 @@ def get_vector_store(text_chunks):
         model_kwargs={"device": "cpu"}
     )
 
+    # ✅ IN-MEMORY Chroma (NO persist_directory)
     vectordb = Chroma.from_texts(
         texts=text_chunks,
-        embedding=embeddings,
-        persist_directory="chroma_db",
-        collection_name="pdf_collection"
+        embedding=embeddings
     )
 
     return vectordb
