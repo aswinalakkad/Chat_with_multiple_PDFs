@@ -86,15 +86,18 @@ def get_conversational_chain():
 
 Instructions:
 - Use ONLY the information from the context below to answer the question
-- If the answer is not in the context, say "I don't know"
-- Be concise and accurate
+- Provide a clear, concise, and well-structured answer
+- If the context doesn't contain enough information to answer the question, say "I don't have enough information in the provided documents to answer this question."
+- Do NOT repeat the same information multiple times
+- Do NOT make up information that's not in the context
 
 Context:
 {context}
 
 Question: {question}
 
-Answer:"""
+
+Answer (be specific and concise):"""
 
     prompt = PromptTemplate(
         template=prompt_template,
