@@ -12,8 +12,6 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-import chromadb
-from chromadb.config import Settings
 
 
 
@@ -60,11 +58,11 @@ def get_text_chunks(text):
 
 
 def get_vector_store(text_chunks):
-    # Clear old vector store
+    # 🔄 Clear old vector store to force refresh
     if os.path.exists("chroma_db"):
         shutil.rmtree("chroma_db")
 
-    # Force model load (important for Streamlit Cloud)
+    # Force-load model (important for Streamlit Cloud)
     _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
     embeddings = HuggingFaceEmbeddings(
@@ -72,17 +70,10 @@ def get_vector_store(text_chunks):
         model_kwargs={"device": "cpu"}
     )
 
-    client = chromadb.Client(
-        Settings(
-            persist_directory="chroma_db",
-            anonymized_telemetry=False
-        )
-    )
-
     vectordb = Chroma.from_texts(
         texts=text_chunks,
         embedding=embeddings,
-        client=client,
+        persist_directory="chroma_db",
         collection_name="pdf_collection"
     )
 
