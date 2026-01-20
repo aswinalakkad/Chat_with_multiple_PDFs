@@ -186,7 +186,7 @@ def main():
         st.markdown("---")
         st.markdown("### ℹ️ About")
         st.markdown("This app uses AI to answer questions from your PDF documents.")
-        st.markdown("**Powered by:** LangChain + Groq + FAISS")
+        st.markdown("**Powered by:** LangChain + Groq + ChromaDB")
 
     if 'processed' not in st.session_state:
         st.info("👈 Upload PDFs from the sidebar to get started!")
