@@ -8,6 +8,10 @@ import os
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from sentence_transformers import SentenceTransformer
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
+
 # Load environment variables (works locally with .env)
 try:
     from dotenv import load_dotenv
@@ -49,15 +53,26 @@ def get_text_chunks(text):
     return unique_chunks
 
 
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
+
 def get_vector_store(text_chunks):
+    # force-load sentence-transformers (important for Streamlit Cloud)
+    _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2",
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": False}
+        model_kwargs={"device": "cpu"}
     )
 
-    vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
-    vector_store.save_local("faiss_index")
+    vectordb = Chroma.from_texts(
+        texts=text_chunks,
+        embedding=embeddings,
+        persist_directory="chroma_db"
+    )
+
+    return vectordb
+
     
 
 def get_conversational_chain():
