@@ -1,8 +1,6 @@
 # 📚 Chat with Multiple PDFs
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://chatwithmultiplepdfs-jzjim4ffya5izw7xrgllsy.streamlit.app/)
-
-An AI-powered RAG application for chatting with multiple PDF documents using natural language.
+An AI-powered application that allows you to upload PDF documents and ask questions about their content using natural language.
 
 ## 🚀 Live Demo
 
@@ -10,50 +8,49 @@ An AI-powered RAG application for chatting with multiple PDF documents using nat
 
 **Click above to chat with PDFs instantly!** ✅
 
-## ✨ Features
 
-- 📄 Upload multiple PDFs
-- 🤖 Natural language questions
-- 🔍 Document-grounded answers
-- 📌 Source chunk transparency
-- ⚡ Groq-powered fast responses
-- 🛡️ No hallucinations
+## Features
 
-## 🧠 How It Works
+- 📄 Upload multiple PDF files
+- 🤖 Ask questions in natural language
+- 💡 Get accurate answers based on document content
+- 🔍 View source chunks for transparency
 
+## Tech Stack
 
+- **Streamlit** - Web interface
+- **LangChain** - LLM orchestration
+- **Groq** - Fast LLM inference
+- **FAISS** - Vector similarity search
+- **Sentence Transformers** - Text embeddings
 
-PDFs → Parse → Chunk → Embed → ChromaDB → Query → Groq Answer
+## Local Setup
 
+1. Clone the repository
+```bash
+git clone https://github.com/your-username/pdf-chat-app.git
+cd pdf-chat-app
+```
 
-## 🛠 Tech Stack
+2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-| Component | Technology |
-|-----------|------------|
-| UI | Streamlit |
-| RAG | LangChain |
-| LLM | Groq |
-| Vector DB | ChromaDB |
-| Embeddings | Sentence Transformers |
-| PDF | PyPDF |
+3. Create `.streamlit/secrets.toml` and add your Groq API key
+```toml
+GROQ_API_KEY = "your-api-key-here"
+```
 
-## ☁️ Deployment
+4. Run the app
+```bash
+streamlit run app.py
+```
 
-✅ Streamlit Cloud ready  
-✅ CPU-only compatible
+## Deployment
 
-## 📌 Notes
+This app is deployed on Streamlit Community Cloud.
 
-- 🔒 Answers from documents only
-- ❓ "Not found" when applicable
-- 🚫 No external data
+## License
 
-## 🔑 Requirements
-
-- Groq API key
-- Python 3.10
-
-## 📄 License
-
-MIT
-
+MIT License
