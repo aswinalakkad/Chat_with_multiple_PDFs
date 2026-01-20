@@ -69,9 +69,7 @@ def get_vector_store(text_chunks):
 
     vectordb = Chroma.from_texts(
         texts=text_chunks,
-        embedding=embeddings,
-        persist_directory="chroma_db"
-    )
+        embedding=embeddings)
 
     return vectordb
 
