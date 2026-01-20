@@ -16,7 +16,7 @@ huggingface-hub==0.23.5
 tokenizers==0.15.2
 
 # Vector DB
-chromadb==0.4.24chromadb==0.4.24
+chromadb==0.4.24
 # Torch (CPU only)
 torch==2.0.1
 
