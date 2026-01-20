@@ -58,6 +58,7 @@ def get_text_chunks(text):
 
 
 def get_vector_store(text_chunks):
+
     # Force-load model (important for Streamlit Cloud)
     _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
