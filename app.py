@@ -11,6 +11,8 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
+from chromadb.config import Settings
+
 
 
 
@@ -58,21 +60,20 @@ def get_text_chunks(text):
 
 
 def get_vector_store(text_chunks):
-
-    # Force-load model (important for Streamlit Cloud)
-    _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-
     embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2",
-        model_kwargs={"device": "cpu"}
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
     vectordb = Chroma.from_texts(
         texts=text_chunks,
-        embedding=embeddings)
+        embedding=embeddings,
+        client_settings=Settings(
+            is_persistent=False,
+            anonymized_telemetry=False
+        )
+    )
 
     return vectordb
-
     
 
 def get_conversational_chain():
