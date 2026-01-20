@@ -59,7 +59,7 @@ def get_text_chunks(text):
 
 
 def get_vector_store(text_chunks):
-    # Force-load model
+    # Force-load model (important for Streamlit Cloud)
     _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
     embeddings = HuggingFaceEmbeddings(
@@ -67,7 +67,7 @@ def get_vector_store(text_chunks):
         model_kwargs={"device": "cpu"}
     )
 
-    # ✅ IN-MEMORY Chroma (NO persist_directory)
+    # In-memory Chroma (no persistence)
     vectordb = Chroma.from_texts(
         texts=text_chunks,
         embedding=embeddings
