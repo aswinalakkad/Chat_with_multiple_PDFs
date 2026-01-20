@@ -7,7 +7,7 @@ from langchain_groq import ChatGroq
 import os
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-
+from langchain_community.embeddings import HuggingFaceEmbeddings
 # Load environment variables (works locally with .env)
 try:
     from dotenv import load_dotenv
@@ -51,9 +51,12 @@ def get_text_chunks(text):
 
 def get_vector_store(text_chunks):
     embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-mpnet-base-v2"
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"},
+        encode_kwargs={"normalize_embeddings": False}
     )
-    vector_store = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
+
+    vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
     
 
