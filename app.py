@@ -66,10 +66,10 @@ def get_vector_store(text_chunks):
         model_kwargs={"device": "cpu"}
     )
 
-    # In-memory Chroma (no persistence)
     vectordb = Chroma.from_texts(
         texts=text_chunks,
-        embedding=embeddings
+        embedding=embeddings,
+        persist_directory="chroma_db"
     )
 
     return vectordb
