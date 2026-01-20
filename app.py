@@ -10,8 +10,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
-from chromadb.config import Settings
+from langchain_community.vectorstores import FAISS
 
 
 
@@ -61,78 +60,61 @@ def get_text_chunks(text):
 
 def get_vector_store(text_chunks):
     embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
-    )
-
-    vectordb = Chroma.from_texts(
-        texts=text_chunks,
-        embedding=embeddings,
-        client_settings=Settings(
-            is_persistent=False,
-            anonymized_telemetry=False
-        )
-    )
-
-    return vectordb
-    
-
-def get_conversational_chain():
-    # Embeddings (CPU-safe for Streamlit Cloud)
-    embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2",
         model_kwargs={"device": "cpu"}
     )
 
-    
-    vectorstore = Chroma(
-        persist_directory="chroma_db",
-        embedding_function=embeddings
+    vectordb = FAISS.from_texts(
+        texts=text_chunks,
+        embedding=embeddings
     )
+
+    # ✅ STORE IN SESSION STATE
+    st.session_state.vectordb = vectordb
+
+    
+
+def get_conversational_chain():
+    # ✅ Use the vector store created during PDF processing
+    if "vectordb" not in st.session_state:
+        st.error("⚠️ Please process PDFs first.")
+        st.stop()
+
+    vectorstore = st.session_state.vectordb
 
     prompt_template = """You are a helpful assistant that answers questions based on the provided context from PDF documents.
 
 Instructions:
 - Use ONLY the information from the context below to answer the question
-- Provide a clear, concise, and well-structured answer
-- If the context doesn't contain enough information to answer the question, say "I don't have enough information in the provided documents to answer this question."
-- Do NOT repeat the same information multiple times
-- Do NOT make up information that's not in the context
+- If the answer is not in the context, say "I don't know"
+- Be concise and accurate
 
 Context:
 {context}
 
 Question: {question}
 
-Answer (be specific and concise):"""
+Answer:"""
 
     prompt = PromptTemplate(
         template=prompt_template,
         input_variables=["context", "question"]
     )
 
-    # Get API key from Streamlit secrets or environment variable
     try:
         api_key = st.secrets["GROQ_API_KEY"]
     except:
         api_key = os.getenv("GROQ_API_KEY")
 
-    if not api_key:
-        st.error("⚠️ GROQ_API_KEY not found! Please add it to Streamlit secrets or .env file")
-        st.stop()
-
     model = ChatGroq(
         model="llama-3.1-8b-instant",
         temperature=0.2,
-        max_tokens=500,
         api_key=api_key
     )
 
     chain = RetrievalQA.from_chain_type(
         llm=model,
-        retriever=vectorstore.as_retriever(
-            search_type="similarity",
-            search_kwargs={"k": 3}
-        ),
+        retriever=vectorstore.as_retriever(search_kwargs={"k": 3}),
         chain_type="stuff",
         chain_type_kwargs={"prompt": prompt},
         return_source_documents=True
