@@ -1,26 +1,14 @@
-# Streamlit
-streamlit==1.31.1
-
-# LangChain + Groq
+sentence-transformers==2.2.2
+transformers==4.36.2
+chromadb==0.4.24
+torch==2.0.1
 langchain==0.1.16
 langchain-community==0.0.36
 langchain-core==0.1.53
 langchain-groq==0.1.5
 groq==0.9.0
 httpx==0.27.0
-
-# Embeddings (CLOUD SAFE)
-sentence-transformers==2.2.2
-transformers==4.36.2
-tokenizers==0.15.2
-
-# Vector DB
-chromadb==0.4.24
-
-# Torch (CPU only – Streamlit Cloud compatible)
-torch==2.0.1
-
-# Utils
+streamlit==1.31.1
 numpy==1.26.4
 pypdf==3.17.4
 python-dotenv==1.0.1
