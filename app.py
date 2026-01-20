@@ -5,6 +5,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 import os
+import shutil
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -56,7 +57,10 @@ def get_text_chunks(text):
 
 
 def get_vector_store(text_chunks):
-    # Force-load model (important for Streamlit Cloud)
+    # 🔥 CLEAR old vector store (important)
+    if os.path.exists("chroma_db"):
+        shutil.rmtree("chroma_db")
+
     _ = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
     embeddings = HuggingFaceEmbeddings(
@@ -71,6 +75,7 @@ def get_vector_store(text_chunks):
     )
 
     return vectordb
+
 
     
 
